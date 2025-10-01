@@ -1,17 +1,26 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws InterruptedException {
+        CuentaBancaria cuenta = new CuentaBancaria(1000.0); // Saldo inicial de 1000
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        // Crear tres hilos de cajeros intentando retirar 500 cada uno
+        Thread cajero1 = new Thread(new Cajero(cuenta, 500), "Cajero 1");
+        Thread cajero2 = new Thread(new Cajero(cuenta, 500), "Cajero 2");
+        Thread cajero3 = new Thread(new Cajero(cuenta, 500), "Cajero 3");
+
+        System.out.println("Saldo inicial: " + cuenta.getSaldo());
+
+        // Iniciar los hilos
+        cajero1.start();
+        cajero2.start();
+        cajero3.start();
+
+        // Esperar a que todos los hilos terminen
+        cajero1.join();
+        cajero2.join();
+        cajero3.join();
+
+        System.out.println("\nSaldo final: " + cuenta.getSaldo());
     }
 }
